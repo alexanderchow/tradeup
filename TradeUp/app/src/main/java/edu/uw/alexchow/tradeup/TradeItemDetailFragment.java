@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -70,7 +71,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"Trade item detail Fragment created!!");
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -104,8 +104,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                              Bundle savedInstanceState) {
 
         final View rootView;
-        Log.v(TAG,"View created!!");
-
         // Show the dummy content as text in a TextView.
         if (addActivity) {
             rootView = inflater.inflate(R.layout.tradeitem_add, container, false);
@@ -120,8 +118,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     EditText status = (EditText) rootView.findViewById(R.id.add_status);
                     EditText timeStamp = (EditText) rootView.findViewById(R.id.add_timeStamp);
 
-                    Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
-
                     TradeItem newItem = new TradeItem();
                     newItem.setDescription(description.getText().toString());
                     newItem.setId(id.getText().toString());
@@ -129,18 +125,17 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     newItem.setPosterName(posterName.getText().toString());
                     newItem.setStatus(status.getText().toString());
                     newItem.setTimeStamp(timeStamp.getText().toString());
-
+                    newItem.setLatitude(latitude);
+                    newItem.setLongitude(longitude);
 
 
                     new Firebase("https://project-5593274257047173778.firebaseio.com/items")
                             .push().setValue(newItem);
 
                     Toast.makeText(getContext(), "Item posted successfully!", Toast.LENGTH_SHORT).show();
-
                     Context context = view.getContext();
                     Intent intent = new Intent(context, MainActivity.class);
                     context.startActivity(intent);
-
                 }
             });
 
@@ -152,10 +147,9 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             ((TextView) rootView.findViewById(R.id.tradeitem_posterName)).setText(mItem.posterName);
             ((TextView) rootView.findViewById(R.id.tradeitem_status)).setText(mItem.status);
             ((TextView) rootView.findViewById(R.id.tradeitem_timeStamp)).setText(mItem.timeStamp);
-            Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
+            ((TextView) rootView.findViewById(R.id.tradeitem_timeStamp)).setText(mItem.timeStamp);
         } else {
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
-            Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
 
         }
         return rootView;
@@ -163,11 +157,10 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.v(TAG,"onConnected");
 
         LocationRequest request = new LocationRequest();
-        request.setInterval(10000);
-        request.setFastestInterval(5000);
+        request.setInterval(240000); // 4 minutes
+        request.setFastestInterval(120000); // 2 minutes
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -190,11 +183,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "onLocationChanged!");
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
-
     }
 
 

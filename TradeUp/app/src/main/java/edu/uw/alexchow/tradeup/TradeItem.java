@@ -7,7 +7,7 @@ import android.location.Location;
  */
 public class TradeItem {
     public String id, name, posterName, image, status, title, description, timeStamp;
-    public Location location;
+    public double latitude, longitude;
 
 
     public TradeItem() {
@@ -20,7 +20,7 @@ public class TradeItem {
     }
 
     public TradeItem(String id, String name, String posterName, String image, String status,
-                     String title, String description, String timeStamp, Location location) {
+                     String title, String description, String timeStamp, double latitude, double longitude) {
         super();
         this.id = id;
         this.name = name;
@@ -30,7 +30,8 @@ public class TradeItem {
         this.title = title;
         this.description = description;
         this.timeStamp = timeStamp;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getId() {
@@ -97,12 +98,20 @@ public class TradeItem {
         this.timeStamp = timeStamp;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 }
