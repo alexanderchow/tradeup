@@ -54,17 +54,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public Firebase mUserFirebase;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
 
-
-
-
-
-
-    private static final List<String> DUMMY_CREDENTIALS = new ArrayList<String>();
+    private static final List<String> FIREBASE_USERS = new ArrayList<String>();
 
 
 
@@ -93,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Users user = dataSnapshot.getValue(Users.class);
                 String user_credentials = user.getEmail() + ":" + user.getPassword();
-                DUMMY_CREDENTIALS.add(user_credentials);
+                FIREBASE_USERS.add(user_credentials);
             }
 
             @Override
@@ -367,7 +358,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            for (String credential : FIREBASE_USERS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
