@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
@@ -21,7 +22,6 @@ import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.FirebaseError;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     /* *************************************
      *              PASSWORD               *
      ***************************************/
-//    private Button mPasswordLoginButton;
+    private Button mPasswordLoginButton;
 
     /* *************************************
      *            ANONYMOUSLY              *
@@ -167,13 +167,13 @@ public class LoginActivity extends AppCompatActivity {
         /* *************************************
          *               PASSWORD              *
          ***************************************/
-//        mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
-//        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                loginWithPassword();
-//            }
-//        });
+        mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
+        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithPassword();
+            }
+        });
 
         /* *************************************
          *              ANONYMOUSLY            *
@@ -193,7 +193,8 @@ public class LoginActivity extends AppCompatActivity {
         mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
 
         /* Create the Firebase ref that is used for all authentication with Firebase */
-        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+//        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+        mFirebaseRef = new Firebase("https://project-5593274257047173778.firebaseio.com/items");
 
         /* Setup the progress dialog that is displayed later when authenticating with Firebase */
         mAuthProgressDialog = new ProgressDialog(this);
@@ -233,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Map<String, String> options = new HashMap<String, String>();
+//        Map<String, String> options = new HashMap<String, String>();
 //        if (requestCode == RC_GOOGLE_LOGIN) {
 //            /* This was a request by the Google API */
 //            if (resultCode != RESULT_OK) {
@@ -329,22 +330,16 @@ public class LoginActivity extends AppCompatActivity {
             mFacebookLoginButton.setVisibility(View.GONE);
 //            mGoogleLoginButton.setVisibility(View.GONE);
 //            mTwitterLoginButton.setVisibility(View.GONE);
-//            mPasswordLoginButton.setVisibility(View.GONE);
+            mPasswordLoginButton.setVisibility(View.GONE);
 //            mAnonymousLoginButton.setVisibility(View.GONE);
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
-            if (authData.getProvider().equals("facebook")
-//                    || authData.getProvider().equals("google")
-//                    || authData.getProvider().equals("twitter")
-                    ) {
+            if (authData.getProvider().equals("facebook")) { // || authData.getProvider().equals("google")|| authData.getProvider().equals("twitter")
                 name = (String) authData.getProviderData().get("displayName");
-            }
-//            else if (authData.getProvider().equals("anonymous")
-//                    || authData.getProvider().equals("password")) {
-//                name = authData.getUid();
-//            }
-            else {
+            } else if (authData.getProvider().equals("anonymous")) {   // || authData.getProvider().equals("password")
+                name = authData.getUid();
+            } else {
                 Log.e(TAG, "Invalid provider: " + authData.getProvider());
             }
             if (name != null) {
@@ -355,7 +350,7 @@ public class LoginActivity extends AppCompatActivity {
             mFacebookLoginButton.setVisibility(View.VISIBLE);
 //            mGoogleLoginButton.setVisibility(View.VISIBLE);
 //            mTwitterLoginButton.setVisibility(View.VISIBLE);
-//            mPasswordLoginButton.setVisibility(View.VISIBLE);
+            mPasswordLoginButton.setVisibility(View.VISIBLE);
 //            mAnonymousLoginButton.setVisibility(View.VISIBLE);
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
@@ -526,10 +521,10 @@ public class LoginActivity extends AppCompatActivity {
 //     *              PASSWORD              *
 //     **************************************
 //     */
-//    public void loginWithPassword() {
-//        mAuthProgressDialog.show();
-//        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
-//    }
+    public void loginWithPassword() {
+        mAuthProgressDialog.show();
+        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+    }
 //
 //    /* ************************************
 //     *             ANONYMOUSLY            *
