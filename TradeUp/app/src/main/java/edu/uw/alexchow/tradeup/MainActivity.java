@@ -1,5 +1,6 @@
 package edu.uw.alexchow.tradeup;
 
+import com.facebook.FacebookSdk;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
