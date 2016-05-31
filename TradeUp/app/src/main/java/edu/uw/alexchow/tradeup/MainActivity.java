@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,6 +38,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
@@ -50,7 +50,8 @@ import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
-                    GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+                    GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+{
 
     private final String TAG = "MainActivity";
 
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity
     private int permissionCheck;
     private GoogleApiClient mGoogleApiClient;
     private static final int LOCATION_REQUEST_CODE = 1;
-
+    private double longitude;
+    private double latitude;
 //    public static final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
 
 
@@ -84,7 +86,6 @@ public class MainActivity extends AppCompatActivity
                 Context context = view.getContext();
                 Intent intent = new Intent(context, TradeItemDetailActivity.class);
                 intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
-
                 context.startActivity(intent);
             }
         });
@@ -119,7 +120,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 TradeItem item = dataSnapshot.getValue(TradeItem.class);
-                DummyContent.addItem(item);
+                // if it's within 10 miles.
+                double longitudueCalcValue = Math.abs(longitude - item.longitude);
+                double latitudeCalcValue = Math.abs(latitude - item.latitude);
+                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+                // and also convert into miles:  1 lat or long = 69.1 miles
+
+                if (item.latitude != 0.0 && item.longitude != 0.0) {
+                    Log.v(TAG, "we are ready to test item");
+                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+                        DummyContent.addItem(item);
+                    }
+                }
 
                 mRecylceView = findViewById(R.id.tradeitem_list);
                 assert mRecylceView != null;
@@ -297,21 +310,21 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    /* Location code
-
-
-     */
+    //
+    // Location Service
+    //
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
         LocationRequest request = new LocationRequest();
-        request.setInterval(6000);
-        request.setFastestInterval(3000);
+        request.setInterval(240000); // 4 minutes
+        request.setFastestInterval(120000); // 2 minutes
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (com.google.android.gms.location.LocationListener) this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (LocationListener) this);
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Log.v(TAG, "Permission declined once inside shouldShowRequest..");
@@ -329,22 +342,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
     }
 
     @Override
@@ -364,5 +363,17 @@ public class MainActivity extends AppCompatActivity
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 }
