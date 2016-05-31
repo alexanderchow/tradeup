@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +36,11 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
+
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
+
+import static edu.uw.alexchow.tradeup.R.id.takePicture;
 
 /**
  * A fragment representing a single TradeItem detail screen.
@@ -71,6 +80,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "fragment recreated");
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -99,6 +109,36 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         }
     }
 
+    private int PICK_IMAGE_REQUEST = 1;
+    private static int REQUEST_PICTURE_CODE = 0;
+    public static final int RESULT_OK = -1;
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(TAG, "Result received: "+data);
+        if (requestCode == REQUEST_PICTURE_CODE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
+            imageView.setImageBitmap(imageBitmap);
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
+            imageView.setImageBitmap(imageBitmap);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,10 +147,36 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         // Show the dummy content as text in a TextView.
         if (addActivity) {
             rootView = inflater.inflate(R.layout.tradeitem_add, container, false);
+
+            Button photo = (Button) rootView.findViewById(R.id.takePicture);
+            Button select = (Button) rootView.findViewById(R.id.selectPicture);
+
+            photo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.v(TAG, "Camera button pressed");
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(getContext().getPackageManager()) != null)
+                        startActivityForResult(intent, REQUEST_PICTURE_CODE);
+                }
+            });
+
+            select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, REQUEST_PICTURE_CODE);
+                }
+            });
+
+            // data processing after submit pressed
             Button btnSubmit = (Button) rootView.findViewById(R.id.add_submit);
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     EditText description = (EditText) rootView.findViewById(R.id.add_description);
                     EditText id = (EditText) rootView.findViewById(R.id.add_id);
                     EditText name = (EditText) rootView.findViewById(R.id.add_name);
@@ -136,6 +202,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     Context context = view.getContext();
                     Intent intent = new Intent(context, MainActivity.class);
                     context.startActivity(intent);
+
+
                 }
             });
 
@@ -152,6 +220,9 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
 
         }
+
+
+
         return rootView;
     }
 

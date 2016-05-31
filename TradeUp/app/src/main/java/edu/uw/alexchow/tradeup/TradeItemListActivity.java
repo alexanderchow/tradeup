@@ -64,7 +64,7 @@ public class TradeItemListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        Log.v(TAG,"");
+        Log.v(TAG,"Inside TradeItemListActivity!!");
 
         if (findViewById(R.id.tradeitem_detail_container) != null) {
             // The detail container view will be present only in the

@@ -40,7 +40,7 @@ public class TradeItemDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v(TAG,"");
+        Log.v(TAG,"Inside Trade item Detail Activitiy");
 
         setContentView(R.layout.activity_tradeitem_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -103,6 +103,11 @@ public class TradeItemDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.v(TAG, "received: "+data);
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
 
 
