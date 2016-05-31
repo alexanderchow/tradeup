@@ -337,7 +337,7 @@ public class LoginActivity extends AppCompatActivity {
             String name = null;
             if (authData.getProvider().equals("facebook")) { // || authData.getProvider().equals("google")|| authData.getProvider().equals("twitter")
                 name = (String) authData.getProviderData().get("displayName");
-            } else if (authData.getProvider().equals("anonymous")) {   // || authData.getProvider().equals("password")
+            } else if (authData.getProvider().equals("password")) {   // || authData.getProvider().equals("anonymous")
                 name = authData.getUid();
             } else {
                 Log.e(TAG, "Invalid provider: " + authData.getProvider());
