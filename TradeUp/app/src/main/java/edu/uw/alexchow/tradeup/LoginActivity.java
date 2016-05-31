@@ -30,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -374,7 +375,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
+
             // TODO: register the new account here.
+            Users newUser = new Users(mEmail, mPassword);
+
+            new Firebase("https://project-5593274257047173778.firebaseio.com/users")
+                    .push().setValue(newUser);
+
+//            Toast.makeText(getApplicationContext(), "New account created successfully!", Toast.LENGTH_SHORT).show();
 
             return true;
         }
