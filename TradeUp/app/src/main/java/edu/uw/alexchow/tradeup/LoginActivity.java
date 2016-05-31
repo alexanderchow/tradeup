@@ -3,6 +3,7 @@ package edu.uw.alexchow.tradeup;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +30,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +51,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
+    public Firebase mUserFirebase;
+
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+
+
+
+
+
+
+    private static final List<String> DUMMY_CREDENTIALS = new ArrayList<String>();
+
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -66,6 +82,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Firebase.setAndroidContext(this);
+
+        mUserFirebase = new Firebase("https://project-5593274257047173778.firebaseio.com/users");
+
+        mUserFirebase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Users user = dataSnapshot.getValue(Users.class);
+                String user_credentials = user.getEmail() + ":" + user.getPassword();
+                DUMMY_CREDENTIALS.add(user_credentials);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -324,6 +375,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
+
             return true;
         }
 
@@ -334,6 +386,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
