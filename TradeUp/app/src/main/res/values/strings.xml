@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">TradeUp</string>
-
+    <string name="facebook_app_id">1216318471735426</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -21,5 +21,7 @@
     </string>
     <string name="title_tradeitem_list">TradeItems</string>
     <string name="title_tradeitem_detail">TradeItem Detail</string>
-    <string name="facebook_app_id">1216318471735426</string>
+    <string name="action_logout">Logout</string>
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="firebase_url">https://project-5593274257047173778.firebaseio.com/users</string>
 </resources>

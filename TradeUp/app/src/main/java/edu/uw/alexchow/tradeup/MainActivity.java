@@ -3,13 +3,10 @@ package edu.uw.alexchow.tradeup;
 import com.facebook.FacebookSdk;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,11 +24,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
@@ -43,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     public Firebase mFirebase;
     public SimpleItemRecyclerViewAdapter mAdapter;
     private View mRecylceView;
+
 
 
 //    public static final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
@@ -250,7 +244,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -262,7 +255,4 @@ public class MainActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-
-
 }
