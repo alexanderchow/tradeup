@@ -198,10 +198,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     TradeItem newItem = new TradeItem();
                     newItem.setDescription(description.getText().toString());
                     newItem.setId(id.getText().toString());
-                    newItem.setName(name.getText().toString());
                     newItem.setPosterName(posterName.getText().toString());
-                    newItem.setStatus(status.getText().toString());
-                    newItem.setTimeStamp(timeStamp.getText().toString());
+                    newItem.setTime(timeStamp.getText().toString());
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
                     newItem.setImage(encodedImage);
@@ -225,9 +223,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
             ((TextView) rootView.findViewById(R.id.trade_item_description)).setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.tradeitem_id)).setText(mItem.id);
-            ((TextView) rootView.findViewById(R.id.tradeitem_name)).setText(mItem.name);
             ((TextView) rootView.findViewById(R.id.tradeitem_posterName)).setText(mItem.posterName);
-            ((TextView) rootView.findViewById(R.id.tradeitem_status)).setText(mItem.status);
             ((ImageView) rootView.findViewById(R.id.detailImageView)).setImageBitmap(currentImageBitmap);
 
         } else {

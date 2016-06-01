@@ -199,9 +199,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
+            holder.mIdView.setText(mValues.get(position).title);
             holder.mImageView.setImageBitmap(StringToBitMap(mValues.get(position).image));
-            holder.mContentView.setText(mValues.get(position).title);
+            holder.mContentView.setText(mValues.get(position).description);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -241,8 +241,8 @@ public class MainActivity extends AppCompatActivity
                 super(view);
                 mView = view;
                 mImageView = (ImageView) view.findViewById(R.id.list_image);
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = (TextView) view.findViewById(R.id.list_item_title);
+                mContentView = (TextView) view.findViewById(R.id.list_item_description);
             }
 
             @Override
