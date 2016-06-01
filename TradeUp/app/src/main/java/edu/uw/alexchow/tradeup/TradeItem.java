@@ -72,7 +72,7 @@ public class TradeItem {
         return time;
     }
 
-    public void setTime(String timeStamp) {
+    public void setTime(String time) {
         this.time = time;
     }
 

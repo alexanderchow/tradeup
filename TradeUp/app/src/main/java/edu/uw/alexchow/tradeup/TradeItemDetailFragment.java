@@ -215,9 +215,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
                     SimpleDateFormat sdf = new SimpleDateFormat("h:mm a MM/dd");
                     String timeStamp = sdf.format(currentTime);
-
-
-
+                    
                     TradeItem newItem = new TradeItem();
                     newItem.setTitle(addTitle.getText().toString());
                     newItem.setId("100");
@@ -227,6 +225,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
                     newItem.setImage(encodedImage);
+
 
                     if (encodedImage == null) {
                         Toast.makeText(getContext(), "Please post a picture of an item.", Toast.LENGTH_SHORT).show();
