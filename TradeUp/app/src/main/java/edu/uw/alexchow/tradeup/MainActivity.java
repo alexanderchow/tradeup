@@ -3,6 +3,8 @@ package edu.uw.alexchow.tradeup;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -121,18 +125,19 @@ public class MainActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 TradeItem item = dataSnapshot.getValue(TradeItem.class);
 
-                // if it's within 10 miles.
-                double longitudueCalcValue = Math.abs(longitude - item.longitude);
-                double latitudeCalcValue = Math.abs(latitude - item.latitude);
-                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
-                // and also convert into miles:  1 lat or long = 69.1 miles
-
-                if (item.latitude != 0.0 && item.longitude != 0.0) {
-                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
-                        DummyContent.addItem(item);
-                    }
-                }
+//                // if it's within 10 miles.
+//                double longitudueCalcValue = Math.abs(longitude - item.longitude);
+//                double latitudeCalcValue = Math.abs(latitude - item.latitude);
+//                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+//                // and also convert into miles:  1 lat or long = 69.1 miles
+//
+//                if (item.latitude != 0.0 && item.longitude != 0.0) {
+//                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+//                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+//                        DummyContent.addItem(item);
+//                    }
+//                }
+                DummyContent.addItem(item);
 
                 mRecylceView = findViewById(R.id.tradeitem_list);
                 assert mRecylceView != null;
@@ -195,6 +200,7 @@ public class MainActivity extends AppCompatActivity
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
+            holder.mImageView.setImageBitmap(StringToBitMap(mValues.get(position).image));
             holder.mContentView.setText(mValues.get(position).title);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +232,7 @@ public class MainActivity extends AppCompatActivity
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
+            public final ImageView mImageView;
             public final TextView mIdView;
             public final TextView mContentView;
             public TradeItem mItem;
@@ -233,6 +240,7 @@ public class MainActivity extends AppCompatActivity
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
+                mImageView = (ImageView) view.findViewById(R.id.list_image);
                 mIdView = (TextView) view.findViewById(R.id.id);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
@@ -373,6 +381,18 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 
 
