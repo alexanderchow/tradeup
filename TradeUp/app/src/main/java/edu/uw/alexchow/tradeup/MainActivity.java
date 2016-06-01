@@ -1,5 +1,6 @@
 package edu.uw.alexchow.tradeup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -68,13 +69,23 @@ public class MainActivity extends AppCompatActivity
     private double longitude;
     private double latitude;
 
-    public static String USER_EMAIL = "";
+    public static String SESSION_USER = "";
+    public static String LIST_TYPE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        USER_EMAIL = getIntent().getStringExtra(MainActivity.USER_EMAIL);
-
+        SESSION_USER = getIntent().getStringExtra(MainActivity.SESSION_USER);
+        Log.v(TAG, "username = " + SESSION_USER);
+        try {
+            LIST_TYPE = getIntent().getStringExtra(MainActivity.LIST_TYPE);
+        } catch (Exception e) {
+            Log.v(TAG, "No such intent extra.");
+        }
+        if (LIST_TYPE == null) {
+            LIST_TYPE = "1";
+        }
+        Log.v(TAG, "List type = " + LIST_TYPE);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -125,7 +136,12 @@ public class MainActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 TradeItem item = dataSnapshot.getValue(TradeItem.class);
 
-//                // if it's within 10 miles.
+                if (LIST_TYPE.equals("2")) {
+                    populateOwnList(item);
+                } else {
+                    DummyContent.addItem(item);
+                }
+//                 if it's within 10 miles.
 //                double longitudueCalcValue = Math.abs(longitude - item.longitude);
 //                double latitudeCalcValue = Math.abs(latitude - item.latitude);
 //                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
@@ -137,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 //                        DummyContent.addItem(item);
 //                    }
 //                }
-                DummyContent.addItem(item);
+//                DummyContent.addItem(item);
 
                 mRecylceView = findViewById(R.id.tradeitem_list);
                 assert mRecylceView != null;
@@ -295,7 +311,11 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-            Intent intent = getIntent();
+            this.recreate();
+        } else if (id == R.id.nav_ownList) {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            intent.putExtra(MainActivity.LIST_TYPE, "2");
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
@@ -394,6 +414,28 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.getMessage();
             return null;
+        }
+    }
+
+    public void populateMasterList(TradeItem item) {
+        // if it's within 10 miles.
+        double longitudueCalcValue = Math.abs(longitude - item.longitude);
+        double latitudeCalcValue = Math.abs(latitude - item.latitude);
+        // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+        // and also convert into miles:  1 lat or long = 69.1 miles
+
+        if (item.latitude != 0.0 && item.longitude != 0.0) {
+            if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+                    latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+                DummyContent.addItem(item);
+            }
+        }
+    }
+
+    public void populateOwnList(TradeItem item) {
+        // if it's our own item
+        if (item.getPosterName() == SESSION_USER) {
+            DummyContent.addItem(item);
         }
     }
 

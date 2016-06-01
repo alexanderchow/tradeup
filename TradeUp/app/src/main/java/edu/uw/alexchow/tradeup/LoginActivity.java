@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public Firebase mUserFirebase;
 
-
     private static final List<String> FIREBASE_USERS = new ArrayList<String>();
 
 
@@ -387,8 +386,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra(MainActivity.USER_EMAIL, mEmail);
-
+                intent.putExtra(MainActivity.SESSION_USER, mEmail);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
