@@ -142,20 +142,21 @@ public class MainActivity extends AppCompatActivity
                         Log.v(TAG, item.posterName);
                         DummyContent.addItem(item);
                     }
+                } else if (LIST_TYPE.equals("3")){
+                    DummyContent.addItem(item);
                 } else {
                     //  if it's within 10 miles.
-//                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
-//                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
-//                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
-//                    // and also convert into miles:  1 lat or long = 69.1 miles
-//
-//                    if (item.latitude != 0.0 && item.longitude != 0.0) {
-//                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-//                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
-//                            DummyContent.addItem(item);
-//                        }
-//                    }
-                    DummyContent.addItem(item);
+                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
+                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
+                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+                    // and also convert into miles:  1 lat or long = 69.1 miles
+
+                    if (item.latitude != 0.0 && item.longitude != 0.0) {
+                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+                            DummyContent.addItem(item);
+                        }
+                    }
                 }
 
 
@@ -318,6 +319,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_itemList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            intent.putExtra(MainActivity.LIST_TYPE, "3");
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_ownList) {
