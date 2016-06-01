@@ -144,18 +144,18 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else {
                     //  if it's within 10 miles.
-                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
-                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
-                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
-                    // and also convert into miles:  1 lat or long = 69.1 miles
-
-                    if (item.latitude != 0.0 && item.longitude != 0.0) {
-                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
-                            DummyContent.addItem(item);
-                        }
-                    }
-//                    DummyContent.addItem(item);
+//                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
+//                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
+//                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+//                    // and also convert into miles:  1 lat or long = 69.1 miles
+//
+//                    if (item.latitude != 0.0 && item.longitude != 0.0) {
+//                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+//                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+//                            DummyContent.addItem(item);
+//                        }
+//                    }
+                    DummyContent.addItem(item);
                 }
 
 
@@ -316,11 +316,10 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-//            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-////            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
-//            finish();
-//            startActivity(intent);
-            this.recreate();
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            finish();
+            startActivity(intent);
         } else if (id == R.id.nav_ownList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
