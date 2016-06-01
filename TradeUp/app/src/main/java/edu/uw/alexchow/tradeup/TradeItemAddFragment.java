@@ -16,6 +16,9 @@ import edu.uw.alexchow.tradeup.dummy.DummyContent;
  */
 public class TradeItemAddFragment extends Fragment {
 
+    private String TAG = "TradeItemAddFragment";
+
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.

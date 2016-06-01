@@ -20,6 +20,9 @@ import android.view.MenuItem;
  */
 public class TradeItemDetailActivity extends AppCompatActivity {
 
+    private String TAG = "TradeItemDetailActivity";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

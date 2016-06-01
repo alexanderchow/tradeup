@@ -3,11 +3,17 @@ package edu.uw.alexchow.tradeup;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
@@ -27,11 +38,23 @@ import edu.uw.alexchow.tradeup.dummy.DummyContent;
  * in two-pane mode (on tablets) or a {@link TradeItemDetailActivity}
  * on handsets.
  */
-public class TradeItemDetailFragment extends Fragment {
+public class TradeItemDetailFragment extends Fragment implements LocationListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
+
+    private String TAG = "trade item detail fragment";
+
+    // for location
+    private int permissionCheck;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int LOCATION_REQUEST_CODE = 1;
+    private double longitude;
+    private double latitude;
+
+
     public static final String ARG_ITEM_ID = "item_id";
 
     /**
@@ -69,6 +92,15 @@ public class TradeItemDetailFragment extends Fragment {
                 appBarLayout.setTitle(mItem.title);
             }
         }
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
     }
 
     @Override
@@ -127,4 +159,75 @@ public class TradeItemDetailFragment extends Fragment {
         }
         return rootView;
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.v(TAG,"onConnected");
+
+        LocationRequest request = new LocationRequest();
+        request.setInterval(10000);
+        request.setFastestInterval(5000);
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (com.google.android.gms.location.LocationListener) this);
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.v(TAG, "Permission declined once inside shouldShowRequest..");
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                Log.v(TAG, "Permission declined");
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.v(TAG, "onLocationChanged!");
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
+
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    // permission check
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch(requestCode){
+            case LOCATION_REQUEST_CODE: { //if asked for location
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    onConnected(null); //do whatever we'd do when first connecting (try again)
+                }
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+
+
 }

@@ -2,11 +2,17 @@ package edu.uw.alexchow.tradeup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +34,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,12 +46,20 @@ import java.util.List;
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+
+    private final String TAG = "MainActivity";
 
     private boolean mTwoPane;
     public Firebase mFirebase;
     public SimpleItemRecyclerViewAdapter mAdapter;
     private View mRecylceView;
+
+    // for location
+    private int permissionCheck;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int LOCATION_REQUEST_CODE = 1;
 
     public static String USER_EMAIL = "";
 
@@ -126,6 +144,14 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
 
@@ -242,7 +268,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_add) {
-            // Handle the camera action
+            Intent intent = new Intent(MainActivity.this, TradeItemDetailActivity.class);
+            intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
+            startActivity(intent);
         } else if (id == R.id.nav_itemList) {
 
         } else if (id == R.id.nav_settings) {
@@ -266,5 +294,72 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+     /* Location code
+     */
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        LocationRequest request = new LocationRequest();
+        request.setInterval(6000);
+        request.setFastestInterval(3000);
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (com.google.android.gms.location.LocationListener) this);
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.v(TAG, "Permission declined once inside shouldShowRequest..");
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                Log.v(TAG, "Permission declined");
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    // permission check
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch(requestCode){
+            case LOCATION_REQUEST_CODE: { //if asked for location
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    onConnected(null); //do whatever we'd do when first connecting (try again)
+                }
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
 }
