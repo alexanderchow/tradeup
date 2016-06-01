@@ -316,10 +316,11 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
-            finish();
-            startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+////            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+//            finish();
+//            startActivity(intent);
+            this.recreate();
         } else if (id == R.id.nav_ownList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
