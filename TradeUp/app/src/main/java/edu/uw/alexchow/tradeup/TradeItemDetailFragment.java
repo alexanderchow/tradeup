@@ -89,6 +89,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SESSION_USER = MainActivity.SESSION_USER;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
@@ -111,7 +112,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 //        if (getArguments().containsKey(SESSION_USER)) {
 //            SESSION_USER = getArguments().getString(SESSION_USER);
 //        }
-        SESSION_USER = MainActivity.SESSION_USER;
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
