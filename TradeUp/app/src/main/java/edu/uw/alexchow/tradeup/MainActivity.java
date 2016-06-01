@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity
                         DummyContent.addItem(item);
                     }
                 } else {
-                    populateMasterList(item);
+//                    populateMasterList(item);
+                    DummyContent.addItem(item);
                 }
 //                 if it's within 10 miles.
 //                double longitudueCalcValue = Math.abs(longitude - item.longitude);
@@ -314,7 +315,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_add) {
             Intent intent = new Intent(MainActivity.this, TradeItemDetailActivity.class);
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
-            intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
