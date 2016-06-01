@@ -5,33 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/trade_item_description"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
 
-    <TextView
-        android:id="@+id/tradeitem_id"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
-
-
-    <TextView
-        android:id="@+id/tradeitem_name"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
+    <ImageView
+        android:id="@+id/detailImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tradeitem_posterName"
@@ -43,7 +21,7 @@
         tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
 
     <TextView
-        android:id="@+id/tradeitem_status"
+        android:id="@+id/tradeitem_time"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,11 +29,14 @@
         android:textIsSelectable="true"
         tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
 
-
-    <ImageView
-        android:id="@+id/detailImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/trade_item_description"
+        style="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:textIsSelectable="true"
+        tools:context="edu.uw.alexchow.tradeup.TradeItemDetailFragment" />
 
 
 

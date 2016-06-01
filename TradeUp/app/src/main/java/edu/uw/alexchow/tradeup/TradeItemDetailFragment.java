@@ -187,44 +187,50 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    EditText description = (EditText) rootView.findViewById(R.id.add_description);
-                    EditText id = (EditText) rootView.findViewById(R.id.add_id);
-                    EditText name = (EditText) rootView.findViewById(R.id.add_name);
-                    EditText posterName = (EditText) rootView.findViewById(R.id.add_posterName);
-                    EditText status = (EditText) rootView.findViewById(R.id.add_status);
-                    EditText timeStamp = (EditText) rootView.findViewById(R.id.add_timeStamp);
 
+
+                    EditText addTitle = (EditText)  rootView.findViewById(R.id.add_title);
+                    EditText addDescription = (EditText) rootView.findViewById(R.id.add_description);
 
                     TradeItem newItem = new TradeItem();
-                    newItem.setDescription(description.getText().toString());
-                    newItem.setId(id.getText().toString());
-                    newItem.setPosterName(posterName.getText().toString());
-                    newItem.setTime(timeStamp.getText().toString());
+                    newItem.setTitle(addTitle.getText().toString());
+                    newItem.setDescription(addDescription.getText().toString());
+                    newItem.setPosterName("Alex");
+                    newItem.setTime("Sunday");
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
                     newItem.setImage(encodedImage);
 
+                    if (encodedImage == null) {
+                        Toast.makeText(getContext(), "Please post a picture of an item.", Toast.LENGTH_SHORT).show();
+                    } else if (newItem.getTitle() == null) {
+                        Toast.makeText(getContext(), "Please enter a title for your item.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new Firebase("https://project-5593274257047173778.firebaseio.com/items")
+                                .push().setValue(newItem);
+                        Toast.makeText(getContext(), "Item posted successfully!", Toast.LENGTH_SHORT).show();
 
-
-                    new Firebase("https://project-5593274257047173778.firebaseio.com/items")
-                            .push().setValue(newItem);
-
-                    Toast.makeText(getContext(), "Item posted successfully!", Toast.LENGTH_SHORT).show();
-
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, MainActivity.class);
-                    context.startActivity(intent);
-
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
+                    }
                 }
             });
 
         } else if (mItem != null) {
             Bitmap currentImageBitmap = StringToBitMap(mItem.getImage());
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
-            ((TextView) rootView.findViewById(R.id.trade_item_description)).setText(mItem.description);
-            ((TextView) rootView.findViewById(R.id.tradeitem_id)).setText(mItem.id);
-            ((TextView) rootView.findViewById(R.id.tradeitem_posterName)).setText(mItem.posterName);
-            ((ImageView) rootView.findViewById(R.id.detailImageView)).setImageBitmap(currentImageBitmap);
+
+            ImageView detailImage = (ImageView)rootView.findViewById(R.id.detailImageView);
+            TextView detailPoster = (TextView)rootView.findViewById(R.id.tradeitem_posterName);
+            TextView detailTime = (TextView) rootView.findViewById(R.id.tradeitem_time);
+            TextView detailDescription = (TextView) rootView.findViewById(R.id.trade_item_description);
+
+
+            detailImage.setImageBitmap(currentImageBitmap);
+            detailPoster.setText("Posted by: " + mItem.posterName);
+            detailTime.setText("Posted on: " + mItem.time);
+            detailDescription.setText("Description: " + mItem.description);
 
         } else {
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);

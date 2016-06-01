@@ -6,49 +6,22 @@
     android:orientation="vertical">
 
     <EditText
+        android:id="@+id/add_title"
+        style="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:text="Title"
+        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
+
+
+    <EditText
         android:id="@+id/add_description"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         android:text="Description"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
-
-    <EditText
-        android:id="@+id/add_id"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:text="id"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
-
-
-    <EditText
-        android:id="@+id/add_name"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:text="name"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
-
-    <EditText
-        android:id="@+id/add_posterName"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:text="poster name"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
-
-    <EditText
-        android:id="@+id/add_status"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:text="status"
         tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
 
     <Button
@@ -64,15 +37,6 @@
         android:layout_height="wrap_content"
         android:onClick="selectPicture"
         android:text="Select Picture" />
-
-    <EditText
-        android:id="@+id/add_timeStamp"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:text="time stamp"
-        tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
 
     <ImageView
         android:id="@+id/imageView"
