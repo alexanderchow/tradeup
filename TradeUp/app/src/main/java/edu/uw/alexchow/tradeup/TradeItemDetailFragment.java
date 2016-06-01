@@ -87,6 +87,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SESSION_USER = MainActivity.SESSION_USER;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
