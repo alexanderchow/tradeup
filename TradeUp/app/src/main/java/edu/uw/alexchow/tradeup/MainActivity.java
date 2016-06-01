@@ -295,7 +295,9 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
