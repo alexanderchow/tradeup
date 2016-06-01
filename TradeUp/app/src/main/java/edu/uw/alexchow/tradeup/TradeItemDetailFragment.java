@@ -40,6 +40,8 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
@@ -208,12 +210,20 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     EditText addTitle = (EditText)  rootView.findViewById(R.id.add_title);
                     EditText addDescription = (EditText) rootView.findViewById(R.id.add_description);
 
+                    Calendar calendar = Calendar.getInstance();
+                    Long currentTime = calendar.getTimeInMillis();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("h:mm a MM/dd");
+                    String timeStamp = sdf.format(currentTime);
+
+
+
                     TradeItem newItem = new TradeItem();
                     newItem.setTitle(addTitle.getText().toString());
                     newItem.setId("100");
                     newItem.setDescription(addDescription.getText().toString());
                     newItem.setPosterName(SESSION_USER);
-                    newItem.setTime("Sunday");
+                    newItem.setTime(timeStamp);
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
                     newItem.setImage(encodedImage);
