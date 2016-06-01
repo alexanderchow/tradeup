@@ -43,13 +43,14 @@ public class MainActivity extends AppCompatActivity
     public SimpleItemRecyclerViewAdapter mAdapter;
     private View mRecylceView;
 
-
-//    public static final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
-
+    public static String USER_EMAIL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        USER_EMAIL = getIntent().getStringExtra(MainActivity.USER_EMAIL);
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
