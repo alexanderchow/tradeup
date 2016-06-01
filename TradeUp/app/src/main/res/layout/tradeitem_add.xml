@@ -51,6 +51,20 @@
         android:text="status"
         tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
 
+    <Button
+        android:id="@+id/takePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="takePicture"
+        android:text="take picture" />
+
+    <Button
+        android:id="@+id/selectPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="selectPicture"
+        android:text="Select Picture" />
+
     <EditText
         android:id="@+id/add_timeStamp"
         style="?android:attr/textAppearanceLarge"
@@ -59,6 +73,11 @@
         android:padding="16dp"
         android:text="time stamp"
         tools:context="edu.uw.alexchow.tradeup.TradeItemAddFragment" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/add_submit"
