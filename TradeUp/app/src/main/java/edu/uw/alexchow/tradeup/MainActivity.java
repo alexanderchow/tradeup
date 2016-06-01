@@ -138,7 +138,10 @@ public class MainActivity extends AppCompatActivity
                 TradeItem item = dataSnapshot.getValue(TradeItem.class);
 
                 if (LIST_TYPE.equals("2")) {
-                    populateOwnList(item);
+                    if (item.posterName.equals(SESSION_USER)) {
+                        Log.v(TAG, item.posterName);
+                        DummyContent.addItem(item);
+                    }
                 } else {
                     DummyContent.addItem(item);
                 }
