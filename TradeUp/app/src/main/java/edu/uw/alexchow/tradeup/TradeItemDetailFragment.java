@@ -89,7 +89,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SESSION_USER = MainActivity.SESSION_USER;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
@@ -108,6 +107,9 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.title);
             }
+        }
+        if (getArguments().containsKey(SESSION_USER)) {
+            SESSION_USER = getArguments().getString(SESSION_USER);
         }
 
         if (mGoogleApiClient == null) {
@@ -215,7 +217,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
                     SimpleDateFormat sdf = new SimpleDateFormat("h:mm a MM/dd");
                     String timeStamp = sdf.format(currentTime);
-                    
+
                     TradeItem newItem = new TradeItem();
                     newItem.setTitle(addTitle.getText().toString());
                     newItem.setId("100");

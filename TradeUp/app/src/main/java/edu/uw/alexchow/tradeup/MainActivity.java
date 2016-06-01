@@ -284,27 +284,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -315,6 +315,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_add) {
             Intent intent = new Intent(MainActivity.this, TradeItemDetailActivity.class);
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
+            intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -328,8 +329,6 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(MainActivity.LIST_TYPE, "2");
             finish();
             startActivity(intent);
-        } else if (id == R.id.nav_settings) {
-
         } else if (id == R.id.nav_logout) {
             finish();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
