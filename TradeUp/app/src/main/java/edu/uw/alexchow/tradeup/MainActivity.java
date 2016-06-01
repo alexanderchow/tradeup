@@ -316,8 +316,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest request = new LocationRequest();
-        request.setInterval(6000);
-        request.setFastestInterval(3000);
+        request.setInterval(5000);
+        request.setFastestInterval(2000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
