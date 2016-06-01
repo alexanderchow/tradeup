@@ -134,7 +134,7 @@ public class TradeItemListActivity extends AppCompatActivity {
                 super(view);
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.list_item_title);
-                mContentView = (TextView) view.findViewById(R.id.list_item_description);
+                mContentView = (TextView) view.findViewById(R.id.list_item_posterName);
             }
 
             @Override

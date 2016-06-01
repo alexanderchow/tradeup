@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).title);
             holder.mImageView.setImageBitmap(StringToBitMap(mValues.get(position).image));
-            holder.mContentView.setText(mValues.get(position).description);
+            holder.mContentView.setText(mValues.get(position).posterName);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity
                 mView = view;
                 mImageView = (ImageView) view.findViewById(R.id.list_image);
                 mIdView = (TextView) view.findViewById(R.id.list_item_title);
-                mContentView = (TextView) view.findViewById(R.id.list_item_description);
+                mContentView = (TextView) view.findViewById(R.id.list_item_posterName);
             }
 
             @Override
