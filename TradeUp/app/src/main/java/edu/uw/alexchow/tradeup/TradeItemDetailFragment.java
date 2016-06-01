@@ -108,9 +108,10 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                 appBarLayout.setTitle(mItem.title);
             }
         }
-        if (getArguments().containsKey(SESSION_USER)) {
-            SESSION_USER = getArguments().getString(SESSION_USER);
-        }
+//        if (getArguments().containsKey(SESSION_USER)) {
+//            SESSION_USER = getArguments().getString(SESSION_USER);
+//        }
+        SESSION_USER = MainActivity.SESSION_USER;
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
