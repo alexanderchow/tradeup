@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,7 +42,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
@@ -127,60 +131,41 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "Result received: "+data);
+        Bitmap imageBitmap = null;
         if (requestCode == REQUEST_PICTURE_CODE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            encodedImage = BitMapToString(imageBitmap);
-
-            double curWidth = imageBitmap.getWidth();
-            double curHeight = imageBitmap.getHeight();
-
-            Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            double screenWidth = size.x * 3 / 4; // 3/4 of the screen width
-            Log.i(TAG, "curWidth        = " + curWidth);
-            Log.i(TAG, "screenWidth        = " + screenWidth);
-
-            double newHeight = curHeight * screenWidth / curWidth;
-
-
-            Bitmap resizedbitmap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
-
-            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(resizedbitmap);
+            imageBitmap = (Bitmap) extras.get("data");
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
-            Bitmap imageBitmap = null;
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            double curWidth = imageBitmap.getWidth();
-            double curHeight = imageBitmap.getHeight();
-
-            Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            double screenWidth = size.x * 3 / 4; // 3/4 of the screen width
-            Log.i(TAG, "curWidth        = " + curWidth);
-            Log.i(TAG, "screenWidth        = " + screenWidth);
-
-            double newHeight = curHeight * screenWidth / curWidth;
-
-
-            Bitmap resizedbitmap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
-
-            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(resizedbitmap);
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
+
+
+        double curWidth = imageBitmap.getWidth();
+        double curHeight = imageBitmap.getHeight();
+
+        Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        double screenWidth = size.x * 3 / 4; // 3/4 of the screen width
+        Log.i(TAG, "curWidth        = " + curWidth);
+        Log.i(TAG, "screenWidth        = " + screenWidth);
+
+        double newHeight = curHeight * screenWidth / curWidth;
+
+
+        Bitmap resizedbitmap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
+
+        ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
+        imageView.setImageBitmap(resizedbitmap);
+        encodedImage = BitMapToString(resizedbitmap);
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
-
-
 
 
     @Override
@@ -223,9 +208,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                 public void onClick(View view) {
                     EditText description = (EditText) rootView.findViewById(R.id.add_description);
                     EditText id = (EditText) rootView.findViewById(R.id.add_id);
-                    EditText name = (EditText) rootView.findViewById(R.id.add_name);
                     EditText posterName = (EditText) rootView.findViewById(R.id.add_posterName);
-                    EditText status = (EditText) rootView.findViewById(R.id.add_status);
                     EditText timeStamp = (EditText) rootView.findViewById(R.id.add_timeStamp);
 
 
