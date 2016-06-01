@@ -130,6 +130,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     newItem.setPosterName(posterName.getText().toString());
                     newItem.setStatus(status.getText().toString());
                     newItem.setTimeStamp(timeStamp.getText().toString());
+                    newItem.setLatitude(latitude);
+                    newItem.setLongitude(longitude);
 
 
 
@@ -165,8 +167,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         Log.v(TAG,"onConnected");
 
         LocationRequest request = new LocationRequest();
-        request.setInterval(10000);
-        request.setFastestInterval(5000);
+        request.setInterval(240000); // 4 minutes
+        request.setFastestInterval(120000); // 2 minutes
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -189,11 +191,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "onLocationChanged!");
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        Log.v(TAG, "Latitude is " + latitude + " and longi is " + longitude);
-
     }
 
 
