@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,11 +37,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import edu.uw.alexchow.tradeup.dummy.DummyContent;
 
+import static edu.uw.alexchow.tradeup.R.id.image;
 import static edu.uw.alexchow.tradeup.R.id.takePicture;
 
 /**
@@ -61,7 +67,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
      */
     private TradeItem mItem;
     private boolean addActivity = false;
-    private String TAG = "trade item detail fragment";
+    private String TAG = "**************trade item detail fragment**************";
 
     // for location
     private int permissionCheck;
@@ -69,6 +75,10 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     private static final int LOCATION_REQUEST_CODE = 1;
     private double longitude;
     private double latitude;
+    private String encodedImage;
+
+    // firebase storage
+    private StorageReference mStorageRef;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -80,7 +90,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "fragment recreated");
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -107,6 +116,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     .addApi(LocationServices.API)
                     .build();
         }
+
+
     }
 
     private int PICK_IMAGE_REQUEST = 1;
@@ -121,8 +132,13 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
+            encodedImage = BitMapToString(imageBitmap);
+            Log.v(TAG, encodedImage);
+
             ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
             imageView.setImageBitmap(imageBitmap);
+
+
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             Bitmap imageBitmap = null;
@@ -139,10 +155,28 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         }
     }
 
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView;
         // Show the dummy content as text in a TextView.
         if (addActivity) {
@@ -154,7 +188,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             photo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.v(TAG, "Camera button pressed");
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (intent.resolveActivity(getContext().getPackageManager()) != null)
                         startActivityForResult(intent, REQUEST_PICTURE_CODE);
@@ -168,6 +201,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(intent, REQUEST_PICTURE_CODE);
+
                 }
             });
 
@@ -193,6 +227,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     newItem.setTimeStamp(timeStamp.getText().toString());
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
+                    newItem.setImage(encodedImage);
+
 
 
                     new Firebase("https://project-5593274257047173778.firebaseio.com/items")
@@ -208,14 +244,14 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             });
 
         } else if (mItem != null) {
+            Bitmap currentImageBitmap = StringToBitMap(mItem.getImage());
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
             ((TextView) rootView.findViewById(R.id.trade_item_description)).setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.tradeitem_id)).setText(mItem.id);
             ((TextView) rootView.findViewById(R.id.tradeitem_name)).setText(mItem.name);
             ((TextView) rootView.findViewById(R.id.tradeitem_posterName)).setText(mItem.posterName);
             ((TextView) rootView.findViewById(R.id.tradeitem_status)).setText(mItem.status);
-            ((TextView) rootView.findViewById(R.id.tradeitem_timeStamp)).setText(mItem.timeStamp);
-            ((TextView) rootView.findViewById(R.id.tradeitem_timeStamp)).setText(mItem.timeStamp);
+            ((ImageView) rootView.findViewById(R.id.detailImageView)).setImageBitmap(currentImageBitmap);
         } else {
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
 

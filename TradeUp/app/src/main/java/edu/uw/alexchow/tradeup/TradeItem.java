@@ -58,11 +58,11 @@ public class TradeItem {
         this.posterName = posterName;
     }
 
-    public String getImge() {
+    public String getImage() {
         return image;
     }
 
-    public void setImge(String image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
