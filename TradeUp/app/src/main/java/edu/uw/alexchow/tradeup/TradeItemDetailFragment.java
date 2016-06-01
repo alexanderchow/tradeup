@@ -69,6 +69,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
 
     public static final String ARG_ITEM_ID = "item_id";
+    public static String SESSION_USER = "";
 
     /**
      * The dummy content this fragment is presenting.
@@ -209,7 +210,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     TradeItem newItem = new TradeItem();
                     newItem.setTitle(addTitle.getText().toString());
                     newItem.setDescription(addDescription.getText().toString());
-                    newItem.setPosterName("Alex");
+                    newItem.setPosterName(SESSION_USER);
                     newItem.setTime("Sunday");
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);

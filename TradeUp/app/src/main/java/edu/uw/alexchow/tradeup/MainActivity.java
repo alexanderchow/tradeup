@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity
                 Context context = view.getContext();
                 Intent intent = new Intent(context, TradeItemDetailActivity.class);
                 intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
+                intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
 
                 context.startActivity(intent);
             }
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity
                         Context context = v.getContext();
                         Intent intent = new Intent(context, TradeItemDetailActivity.class);
                         intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
 
                         context.startActivity(intent);
                     }
@@ -309,6 +311,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_add) {
             Intent intent = new Intent(MainActivity.this, TradeItemDetailActivity.class);
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
+            intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
             this.recreate();

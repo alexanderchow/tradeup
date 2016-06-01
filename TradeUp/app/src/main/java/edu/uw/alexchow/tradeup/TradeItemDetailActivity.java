@@ -21,6 +21,7 @@ import android.view.MenuItem;
 public class TradeItemDetailActivity extends AppCompatActivity {
 
     private String TAG = "TradeItemDetailActivity";
+    public static String SESSION_USER = "";
 
 
     @Override
