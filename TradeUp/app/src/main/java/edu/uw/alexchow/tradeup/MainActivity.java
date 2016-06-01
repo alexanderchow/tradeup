@@ -1,7 +1,11 @@
 package edu.uw.alexchow.tradeup;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     private double latitude;
 
     public static String USER_EMAIL = "";
+    private final static String MY_MESSAGE = "edu.uw.alexchow.tradeup.newItem";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,29 +120,26 @@ public class MainActivity extends AppCompatActivity
             mTwoPane = true;
         }
 
-        mFirebase = new Firebase("https://project-5593274257047173778.firebaseio.com/items");
-
         DummyContent.clearItems();
-
+        mFirebase = new Firebase("https://project-5593274257047173778.firebaseio.com/items");
         mFirebase.addChildEventListener(new ChildEventListener() {
-
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.v(TAG, "Child Changed*****");
                 TradeItem item = dataSnapshot.getValue(TradeItem.class);
 
 //                // if it's within 10 miles.
-//                double longitudueCalcValue = Math.abs(longitude - item.longitude);
-//                double latitudeCalcValue = Math.abs(latitude - item.latitude);
-//                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
-//                // and also convert into miles:  1 lat or long = 69.1 miles
-//
-//                if (item.latitude != 0.0 && item.longitude != 0.0) {
-//                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-//                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
-//                        DummyContent.addItem(item);
-//                    }
-//                }
-                DummyContent.addItem(item);
+                double longitudueCalcValue = Math.abs(longitude - item.longitude);
+                double latitudeCalcValue = Math.abs(latitude - item.latitude);
+                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+                // and also convert into miles:  1 lat or long = 69.1 miles
+
+                if (item.latitude != 0.0 && item.longitude != 0.0) {
+                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 1) {
+                        DummyContent.addItem(item);
+                    }
+                }
 
                 mRecylceView = findViewById(R.id.tradeitem_list);
                 assert mRecylceView != null;
@@ -326,7 +328,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest request = new LocationRequest();
-        request.setInterval(5000);
+        request.setInterval(4000);
         request.setFastestInterval(2000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -347,11 +349,39 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
 
     }
+//
+//    private BroadcastReceiver mBroadcast =  new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context mContext, Intent mIntent) {
+//
+//            if(MY_MESSAGE.equals(mIntent.getAction())){
+//                new AlertDialog.Builder(getApplicationContext())
+//                        .setMessage("收到訊息!")
+//                        .setPositiveButton("確定", new DialogInterface.OnClickListener(){
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                getApplicationContext().unregisterReceiver(mBroadcast);
+//                            }
+//                        })
+//                        .show();
+//            }
+//        }
+//    };
 
     @Override
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+        Log.v(TAG, "location changed***");
+
+//        getApplicationContext().registerReceiver(mBroadcast, new IntentFilter(MY_MESSAGE));
+//                Intent intent = new Intent();
+//                intent.setAction(MY_MESSAGE);
+//                Log.v(TAG, "sending broadcast with intent***");
+//                Log.v(TAG, "It's " + intent);
+//        getApplicationContext().sendBroadcast(intent);
+
+
     }
 
     @Override

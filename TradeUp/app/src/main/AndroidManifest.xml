@@ -47,6 +47,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uw.alexchow.tradeup.TradeItemListActivity" />
         </activity>
+
+        <receiver android:name=".TradeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

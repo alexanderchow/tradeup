@@ -27,8 +27,6 @@ public class DummyContent {
      */
     public static final Map<String, TradeItem> ITEM_MAP = new HashMap<String, TradeItem>();
 
-    private static final int COUNT = 25;
-
 //    static {
 //        // Add some sample items.
 //        for (int i = 1; i <= COUNT; i++) {
@@ -57,6 +55,10 @@ public class DummyContent {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
+    }
+
+    public int size() {
+        return ITEMS.size();
     }
 
 }

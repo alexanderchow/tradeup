@@ -1,8 +1,12 @@
 package edu.uw.alexchow.tradeup;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -228,6 +232,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                         Intent intent = new Intent(context, MainActivity.class);
                         context.startActivity(intent);
                     }
+
                 }
             });
 
