@@ -6,7 +6,7 @@ import android.location.Location;
  * Created by alexchow on 5/23/16.
  */
 public class TradeItem {
-    public String id, name, posterName, image, status, title, description, timeStamp;
+    public String id, posterName, image, title, description, time;
     public double latitude, longitude;
 
 
@@ -19,17 +19,15 @@ public class TradeItem {
         this.description = description;
     }
 
-    public TradeItem(String id, String name, String posterName, String image, String status,
-                     String title, String description, String timeStamp, double latitude, double longitude) {
+    public TradeItem(String id, String posterName, String image,
+                     String title, String description, String time, double latitude, double longitude) {
         super();
         this.id = id;
-        this.name = name;
         this.posterName = posterName;
         this.image = image;
-        this.status = status;
         this.title = title;
         this.description = description;
-        this.timeStamp = timeStamp;
+        this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -42,13 +40,6 @@ public class TradeItem {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPosterName() {
         return posterName;
@@ -66,13 +57,6 @@ public class TradeItem {
         this.image = image;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getTitle() {
         return title;
@@ -90,12 +74,12 @@ public class TradeItem {
         this.description = description;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getTime() {
+        return time;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public double getLatitude() { return latitude; }

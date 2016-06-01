@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
+            holder.mIdView.setText(mValues.get(position).description);
             holder.mContentView.setText(mValues.get(position).title);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -234,8 +234,8 @@ public class MainActivity extends AppCompatActivity
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = (TextView) view.findViewById(R.id.list_item_title);
+                mContentView = (TextView) view.findViewById(R.id.list_item_description);
             }
 
             @Override

@@ -1,13 +1,16 @@
 package edu.uw.alexchow.tradeup;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +23,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +123,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     public static final int RESULT_OK = -1;
 
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "Result received: "+data);
@@ -127,9 +132,23 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             encodedImage = BitMapToString(imageBitmap);
 
+            double curWidth = imageBitmap.getWidth();
+            double curHeight = imageBitmap.getHeight();
+
+            Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            double screenWidth = size.x * 3 / 4; // 3/4 of the screen width
+            Log.i(TAG, "curWidth        = " + curWidth);
+            Log.i(TAG, "screenWidth        = " + screenWidth);
+
+            double newHeight = curHeight * screenWidth / curWidth;
+
+
+            Bitmap resizedbitmap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
 
             ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(imageBitmap);
+            imageView.setImageBitmap(resizedbitmap);
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             Bitmap imageBitmap = null;
@@ -139,8 +158,23 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                 e.printStackTrace();
             }
 
+            double curWidth = imageBitmap.getWidth();
+            double curHeight = imageBitmap.getHeight();
+
+            Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            double screenWidth = size.x * 3 / 4; // 3/4 of the screen width
+            Log.i(TAG, "curWidth        = " + curWidth);
+            Log.i(TAG, "screenWidth        = " + screenWidth);
+
+            double newHeight = curHeight * screenWidth / curWidth;
+
+
+            Bitmap resizedbitmap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
+
             ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(imageBitmap);
+            imageView.setImageBitmap(resizedbitmap);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -198,10 +232,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
                     TradeItem newItem = new TradeItem();
                     newItem.setDescription(description.getText().toString());
                     newItem.setId(id.getText().toString());
-                    newItem.setName(name.getText().toString());
                     newItem.setPosterName(posterName.getText().toString());
-                    newItem.setStatus(status.getText().toString());
-                    newItem.setTimeStamp(timeStamp.getText().toString());
+                    newItem.setTime(timeStamp.getText().toString());
                     newItem.setLatitude(latitude);
                     newItem.setLongitude(longitude);
                     newItem.setImage(encodedImage);
@@ -225,9 +257,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
             ((TextView) rootView.findViewById(R.id.trade_item_description)).setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.tradeitem_id)).setText(mItem.id);
-            ((TextView) rootView.findViewById(R.id.tradeitem_name)).setText(mItem.name);
             ((TextView) rootView.findViewById(R.id.tradeitem_posterName)).setText(mItem.posterName);
-            ((TextView) rootView.findViewById(R.id.tradeitem_status)).setText(mItem.status);
             ((ImageView) rootView.findViewById(R.id.detailImageView)).setImageBitmap(currentImageBitmap);
 
         } else {
