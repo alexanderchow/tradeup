@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,28 +124,40 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "Result received: "+data);
+        Bitmap imageBitmap = null;
         if (requestCode == REQUEST_PICTURE_CODE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBitmap = (Bitmap) extras.get("data");
             encodedImage = BitMapToString(imageBitmap);
 
-
-            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(imageBitmap);
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
-            Bitmap imageBitmap = null;
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
-            imageView.setImageBitmap(imageBitmap);
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
+
+
+        double curWidth = imageBitmap.getWidth();
+        double curHeight = imageBitmap.getHeight();
+
+        Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        double screenWidth = size.x * 3 / 4;  // 3/4 of the screen width
+
+        double newHeight = curHeight * screenWidth / curWidth;
+
+        Bitmap resizedBitMap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
+
+        ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
+        imageView.setImageBitmap(resizedBitMap);
+        encodedImage = BitMapToString(resizedBitMap);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
 
@@ -218,7 +232,6 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             });
 
         } else if (mItem != null) {
-            Bitmap currentImageBitmap = StringToBitMap(mItem.getImage());
             rootView = inflater.inflate(R.layout.tradeitem_detail, container, false);
 
             ImageView detailImage = (ImageView)rootView.findViewById(R.id.detailImageView);
@@ -227,7 +240,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             TextView detailDescription = (TextView) rootView.findViewById(R.id.trade_item_description);
 
 
-            detailImage.setImageBitmap(currentImageBitmap);
+            detailImage.setImageBitmap(StringToBitMap(mItem.image));
             detailPoster.setText("Posted by: " + mItem.posterName);
             detailTime.setText("Posted on: " + mItem.time);
             detailDescription.setText("Description: " + mItem.description);
