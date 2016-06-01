@@ -317,7 +317,10 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-            this.recreate();
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            finish();
+            startActivity(intent);
         } else if (id == R.id.nav_ownList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
