@@ -143,21 +143,21 @@ public class MainActivity extends AppCompatActivity
                         DummyContent.addItem(item);
                     }
                 } else {
-                    populateMasterList(item);
-                }
-//                 if it's within 10 miles.
-//                double longitudueCalcValue = Math.abs(longitude - item.longitude);
-//                double latitudeCalcValue = Math.abs(latitude - item.latitude);
-//                // getting the distance from user's location to item by doing a^2 + b^2 = c^2
-//                // and also convert into miles:  1 lat or long = 69.1 miles
+//                    //  if it's within 10 miles.
+//                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
+//                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
+//                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+//                    // and also convert into miles:  1 lat or long = 69.1 miles
 //
-//                if (item.latitude != 0.0 && item.longitude != 0.0) {
-//                    if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-//                            latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
-//                        DummyContent.addItem(item);
+//                    if (item.latitude != 0.0 && item.longitude != 0.0) {
+//                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+//                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+//                            DummyContent.addItem(item);
+//                        }
 //                    }
-//                }
-//                DummyContent.addItem(item);
+                    DummyContent.addItem(item);
+                }
+
 
                 mRecylceView = findViewById(R.id.tradeitem_list);
                 assert mRecylceView != null;
