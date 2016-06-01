@@ -126,8 +126,9 @@ public class MainActivity extends AppCompatActivity
                 double latitudeCalcValue = Math.abs(latitude - item.latitude);
                 // getting the distance from user's location to item by doing a^2 + b^2 = c^2
                 // and also convert into miles:  1 lat or long = 69.1 miles
-
+                Log.v(TAG, "outside 0.0 check");
                 if (item.latitude != 0.0 && item.longitude != 0.0) {
+                    Log.v(TAG, "inside 0.0 check");
                     if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
                             latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
                         DummyContent.addItem(item);
@@ -287,7 +288,9 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
-
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -316,8 +319,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest request = new LocationRequest();
-        request.setInterval(5000);
-        request.setFastestInterval(2000);
+        request.setInterval(10000);
+        request.setFastestInterval(5000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
