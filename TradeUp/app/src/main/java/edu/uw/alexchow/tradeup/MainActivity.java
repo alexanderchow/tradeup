@@ -143,8 +143,7 @@ public class MainActivity extends AppCompatActivity
                         DummyContent.addItem(item);
                     }
                 } else {
-//                    populateMasterList(item);
-                    DummyContent.addItem(item);
+                    populateMasterList(item);
                 }
 //                 if it's within 10 miles.
 //                double longitudueCalcValue = Math.abs(longitude - item.longitude);
