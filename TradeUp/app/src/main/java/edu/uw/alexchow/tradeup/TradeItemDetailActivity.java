@@ -3,6 +3,7 @@ package edu.uw.alexchow.tradeup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,13 +13,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+
 /**
  * An activity representing a single TradeItem detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link TradeItemListActivity}.
  */
-public class TradeItemDetailActivity extends AppCompatActivity {
+public class TradeItemDetailActivity extends AppCompatActivity{
 
     private String TAG = "TradeItemDetailActivity";
     public static String SESSION_USER = "";
@@ -27,6 +31,7 @@ public class TradeItemDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SESSION_USER = getIntent().getStringExtra(TradeItemDetailActivity.SESSION_USER);
 
         setContentView(R.layout.activity_tradeitem_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -83,9 +88,14 @@ public class TradeItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(MainActivity.LIST_TYPE, "3");
+            intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            NavUtils.navigateUpTo(this, intent );
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
