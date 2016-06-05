@@ -224,7 +224,7 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
                     TradeItem newItem = new TradeItem();
                     newItem.setTitle(addTitle.getText().toString());
-                    newItem.setId("100");
+                    newItem.setId(SESSION_USER + ":" + addTitle.getText().toString());
                     newItem.setDescription(addDescription.getText().toString());
                     newItem.setPosterName(SESSION_USER);
                     newItem.setTime(timeStamp);
