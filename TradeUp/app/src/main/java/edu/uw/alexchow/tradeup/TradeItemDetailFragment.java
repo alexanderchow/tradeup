@@ -104,7 +104,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
             }
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout =
+                    (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.title);
             }
@@ -140,7 +141,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),
+                        imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -157,7 +159,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
         double newHeight = curHeight * screenWidth / curWidth;
 
-        Bitmap resizedBitMap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth), (int) Math.round(newHeight), true);
+        Bitmap resizedBitMap = Bitmap.createScaledBitmap(imageBitmap, (int) Math.round(screenWidth),
+                (int) Math.round(newHeight), true);
 
         ImageView imageView = (ImageView)getActivity().findViewById(R.id.imageView);
         imageView.setImageBitmap(resizedBitMap);
@@ -231,16 +234,21 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
 
                     if (encodedImage == null) {
-                        Toast.makeText(getContext(), "Please post a picture of an item.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please post a picture of an item.",
+                                Toast.LENGTH_SHORT).show();
                     } else if (newItem.getTitle() == null) {
-                        Toast.makeText(getContext(), "Please enter a title for your item.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please enter a title for your item.",
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         new Firebase("https://project-5593274257047173778.firebaseio.com/items")
                                 .push().setValue(newItem);
-                        Toast.makeText(getContext(), "Item posted successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Item posted successfully!",
+                                Toast.LENGTH_SHORT).show();
 
                         Context context = view.getContext();
                         Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra(MainActivity.LIST_TYPE, "2");
+                        intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
                         context.startActivity(intent);
                     }
                 }
@@ -276,14 +284,19 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
         request.setFastestInterval(2000); // 2 minutes
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
+        permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (com.google.android.gms.location.LocationListener) this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request,
+                    (com.google.android.gms.location.LocationListener) this);
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Log.v(TAG, "Permission declined once inside shouldShowRequest..");
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_REQUEST_CODE);
                 Log.v(TAG, "Permission declined");
             }
         }
@@ -308,7 +321,8 @@ public class TradeItemDetailFragment extends Fragment implements LocationListene
 
     // permission check
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
         switch(requestCode){
             case LOCATION_REQUEST_CODE: { //if asked for location
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
