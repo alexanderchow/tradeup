@@ -27,26 +27,31 @@ public class TradeItemDetailActivity extends AppCompatActivity{
     private String TAG = "TradeItemDetailActivity";
     public static String SESSION_USER = "";
 
+    public static double CURRENT_LONGITUDE;
+    public static double CURRENT_LATITUDE;
+
+    private double longitude;
+    private double latitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SESSION_USER = getIntent().getStringExtra(TradeItemDetailActivity.SESSION_USER);
 
+        try {
+            CURRENT_LONGITUDE = getIntent().getDoubleExtra("longitude", MainActivity.CURRENT_LONGITUDE);
+            CURRENT_LATITUDE = getIntent().getDoubleExtra("latitude", MainActivity.CURRENT_LATITUDE);
+            longitude = CURRENT_LONGITUDE;
+            latitude = CURRENT_LATITUDE;
+        } catch (Exception e) {
+            Log.v(TAG, "No such intent extra current location");
+        }
+
         setContentView(R.layout.activity_tradeitem_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TradeItemAddFragment fragment = new TradeItemAddFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.tradeitem_detail_container, fragment)
-                        .commit();
-            }
-        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -91,6 +96,8 @@ public class TradeItemDetailActivity extends AppCompatActivity{
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(MainActivity.LIST_TYPE, "3");
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", latitude);
             NavUtils.navigateUpTo(this, intent );
             return true;
         }

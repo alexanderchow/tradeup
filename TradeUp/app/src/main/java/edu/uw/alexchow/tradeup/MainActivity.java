@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     // for location
     private int permissionCheck;
     private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
     private static final int LOCATION_REQUEST_CODE = 1;
 
     private double longitude;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     public static String SESSION_USER = "";
     public static String LIST_TYPE;
+    public static double CURRENT_LONGITUDE;
+    public static double CURRENT_LATITUDE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +83,22 @@ public class MainActivity extends AppCompatActivity
         try {
             LIST_TYPE = getIntent().getStringExtra(MainActivity.LIST_TYPE);
         } catch (Exception e) {
-            Log.v(TAG, "No such intent extra.");
+            Log.v(TAG, "No such intent extra list type.");
         }
+
+        try {
+            CURRENT_LONGITUDE = getIntent().getDoubleExtra("longitude", MainActivity.CURRENT_LONGITUDE);
+            CURRENT_LATITUDE = getIntent().getDoubleExtra("latitude", MainActivity.CURRENT_LATITUDE);
+            longitude = CURRENT_LONGITUDE;
+            latitude = CURRENT_LATITUDE;
+        } catch (Exception e) {
+            Log.v(TAG, "No such intent extra current location");
+        }
+
         if (LIST_TYPE == null) {
             LIST_TYPE = "1";
         }
         Log.v(TAG, "List type = " + LIST_TYPE);
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,8 +112,9 @@ public class MainActivity extends AppCompatActivity
                 Context context = view.getContext();
                 Intent intent = new Intent(context, TradeItemDetailActivity.class);
                 intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
-                intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
-
+                intent.putExtra(TradeItemDetailActivity.SESSION_USER, SESSION_USER);
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("latitude", latitude);
                 context.startActivity(intent);
             }
         });
@@ -128,9 +141,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         mFirebase = new Firebase("https://project-5593274257047173778.firebaseio.com/items");
-
         DummyContent.clearItems();
-
         mFirebase.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -142,18 +153,35 @@ public class MainActivity extends AppCompatActivity
                         Log.v(TAG, item.posterName);
                         DummyContent.addItem(item);
                     }
-                } else if (LIST_TYPE.equals("3")){
-                    DummyContent.addItem(item);
+//                }
+//                else if (LIST_TYPE.equals("3")){
+//                    //  if it's within 10 miles.
+//                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
+//                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
+//                    // getting the distance from user's location to item by doing a^2 + b^2 = c^2
+//                    // and also convert into miles:  1 lat or long = 69.1 miles
+//
+//                    if (item.latitude != 0.0 && item.longitude != 0.0) {
+//                        if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+//                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 1) {
+//                            DummyContent.addItem(item);
+//                        }
+//                    }
                 } else {
                     //  if it's within 10 miles.
-                    double longitudueCalcValue = Math.abs(longitude - item.longitude);
-                    double latitudeCalcValue = Math.abs(latitude - item.latitude);
+                    double longitudueCalcValue = Math.abs(longitude - item.getLongitude());
+                    double latitudeCalcValue = Math.abs(latitude - item.getLatitude());
                     // getting the distance from user's location to item by doing a^2 + b^2 = c^2
                     // and also convert into miles:  1 lat or long = 69.1 miles
-
-                    if (item.latitude != 0.0 && item.longitude != 0.0) {
+                    if (item.getLongitude() != 0.0 && item.getLatitude() != 0.0) {
+                        String testing = "" + Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
+                                latitudeCalcValue * latitudeCalcValue));
+                        Log.v(TAG, testing);
+                        Log.v(TAG, "" + latitude + ", " + longitude);
                         if (Math.abs(Math.sqrt(longitudueCalcValue * longitudueCalcValue +
-                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 10) {
+                                latitudeCalcValue * latitudeCalcValue)) * 69.1 < 1) {
+
+
                             DummyContent.addItem(item);
                         }
                     }
@@ -193,6 +221,12 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(2000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
     }
 
 
@@ -240,7 +274,8 @@ public class MainActivity extends AppCompatActivity
                         Intent intent = new Intent(context, TradeItemDetailActivity.class);
                         intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                         intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
-
+                        intent.putExtra("longitude", longitude);
+                        intent.putExtra("latitude", latitude);
                         context.startActivity(intent);
                     }
                 }
@@ -316,17 +351,23 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, TradeItemDetailActivity.class);
             intent.putExtra(TradeItemDetailFragment.ARG_ITEM_ID, "activityMainAdd");
             intent.putExtra(TradeItemDetailFragment.SESSION_USER, SESSION_USER);
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", latitude);
             startActivity(intent);
         } else if (id == R.id.nav_itemList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
             intent.putExtra(MainActivity.LIST_TYPE, "3");
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", latitude);
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_ownList) {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.SESSION_USER, SESSION_USER);
             intent.putExtra(MainActivity.LIST_TYPE, "2");
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", latitude);
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
@@ -354,19 +395,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest request = new LocationRequest();
-        request.setInterval(5000);
-        request.setFastestInterval(2000);
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.v(TAG, "on connected happening");
+//        LocationRequest request = new LocationRequest();
+//        request.setInterval(5000);
+//        request.setFastestInterval(2000);
+//        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        permissionCheck = ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, (com.google.android.gms.location.LocationListener) this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
+                    (com.google.android.gms.location.LocationListener) this);
+            Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            handleNewLocation(currentLocation);
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Log.v(TAG, "Permission declined once inside shouldShowRequest..");
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{
+                        android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
                 Log.v(TAG, "Permission declined");
             }
         }
@@ -379,9 +427,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
+        handleNewLocation(location);
+    }
+
+    public void handleNewLocation(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -393,6 +446,7 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch(requestCode){
             case LOCATION_REQUEST_CODE: { //if asked for location
+
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     onConnected(null); //do whatever we'd do when first connecting (try again)
                 }
@@ -410,9 +464,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onStop() {
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
         super.onStop();
     }
+
+    @Override
+    public void onResume() {
+        mGoogleApiClient.connect();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+        super.onPause();
+    }
+
 
 
     public Bitmap StringToBitMap(String encodedString) {
