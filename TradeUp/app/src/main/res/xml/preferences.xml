@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_show_notification"
+        android:title="Send Automated Response?"
+        android:defaultValue="false"
+        />
+
+    <EditTextPreference
+        android:key="pref_notification_message"
+        android:title="Set Automated Response"
+        android:defaultValue="Hi! (Yama)"
+        />
+</PreferenceScreen>
